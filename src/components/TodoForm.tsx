@@ -2,14 +2,43 @@
 import { useState } from "react";
 import Container from "./Container";
 import { IoClose } from "react-icons/io5";
+import toast, { Toaster } from "react-hot-toast";
+import TodoLists from "./TodoLists";
 
 const TodoForm = () => {
   const [todoinput, setTodoinput] = useState("");
-  const [todoArray, setTodoArray] = useState([]);
+  const [todoArray, setTodoArray] = useState<{ id: number; text: string }[]>(
+    []
+  );
 
   const saveTodo = () => {
-    console.log(todoinput);
+    if (todoinput === "") {
+      toast.error("Please enter your todo!");
+    } else {
+      const newTodo = {
+        id: Math.random(),
+        text: todoinput,
+      };
+      setTodoArray([...todoArray, newTodo]);
+      toast.success("Todo added successfully");
+      setTodoinput("");
+    }
   };
+
+  const handleDeleteTodo = (idToDelete: number) => {
+    const updatedTodos = todoArray.filter((item) => item.id !== idToDelete);
+    setTodoArray(updatedTodos);
+    toast.success("Todo deleted successfully");
+  };
+
+  const handleEditTodo = (idToEdit: number, newText: string) => {
+    const updatedTodos = todoArray.map((item) =>
+      item.id === idToEdit ? { ...item, text: newText } : item
+    );
+    setTodoArray(updatedTodos);
+    toast.success("Todo edited successfully");
+  };
+
   return (
     <Container className="py-10">
       <div className="max-w-2xl mx-auto bg-white text-slate-950 py-10 px-6 rounded-md shadow-lg shadow-slate-400">
@@ -38,7 +67,20 @@ const TodoForm = () => {
             Add
           </button>
         </div>
+        {todoArray.length > 0 && (
+          <div className="mt-10">
+            {todoArray.map((item) => (
+              <TodoLists
+                key={item.id}
+                item={item}
+                onDelete={handleDeleteTodo}
+                onEdit={handleEditTodo}
+              />
+            ))}
+          </div>
+        )}
       </div>
+      <Toaster />
     </Container>
   );
 };
