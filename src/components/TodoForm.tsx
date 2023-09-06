@@ -4,8 +4,11 @@ import Container from "./Container";
 import { IoClose } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
 import TodoLists from "./TodoLists";
+import { useDispatch } from "react-redux";
+import { addTodo } from "@/redux/TodoSlice";
 
 const TodoForm = () => {
+  const dispatch = useDispatch();
   const [todoinput, setTodoinput] = useState("");
   const [todoArray, setTodoArray] = useState<{ id: number; text: string }[]>(
     []
@@ -19,6 +22,7 @@ const TodoForm = () => {
         id: Math.random(),
         text: todoinput,
       };
+      dispatch(addTodo({ id: Math.random(), text: todoinput }));
       setTodoArray([...todoArray, newTodo]);
       toast.success("Todo added successfully");
       setTodoinput("");
@@ -59,17 +63,7 @@ const TodoForm = () => {
             Add
           </button>
         </div>
-        {todoArray.length > 0 && (
-          <div className="mt-10">
-            {todoArray.map((item) => (
-              <TodoLists
-                key={item.id}
-                item={item}
-                onDelete={handleDeleteTodo}
-              />
-            ))}
-          </div>
-        )}
+        <TodoLists />
       </div>
       <Toaster />
     </Container>
