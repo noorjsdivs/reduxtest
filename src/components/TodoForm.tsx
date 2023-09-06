@@ -31,14 +31,6 @@ const TodoForm = () => {
     toast.success("Todo deleted successfully");
   };
 
-  const handleEditTodo = (idToEdit: number, newText: string) => {
-    const updatedTodos = todoArray.map((item) =>
-      item.id === idToEdit ? { ...item, text: newText } : item
-    );
-    setTodoArray(updatedTodos);
-    toast.success("Todo edited successfully");
-  };
-
   return (
     <Container className="py-10">
       <div className="max-w-2xl mx-auto bg-white text-slate-950 py-10 px-6 rounded-md shadow-lg shadow-slate-400">
@@ -74,7 +66,6 @@ const TodoForm = () => {
                 key={item.id}
                 item={item}
                 onDelete={handleDeleteTodo}
-                onEdit={handleEditTodo}
               />
             ))}
           </div>
